@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import SeasonDisplay from './SeasonDisplay';
+import Spinner from './Spinner';
 
 // FUNCTIONAL COMPONENT
 // const App = () => {
@@ -48,16 +49,7 @@ class App extends React.Component {
         console.log('Component was just updated - it re-rendered');
     }
 
-    render() { // React says we have to define render
-        // return (
-        //     <div>
-        //         Latitude: {this.state.lat}
-        //         <br />
-        //         Error: {this.state.errorMessage}
-        //     </div>
-        // );
-
-        // CONDITIONAL RENDING
+    renderContent() { // helper method
         if (this.state.errorMessage && !this.state.lat) { // if we have errorMessage && do not have a latitude
             return <div>Error: {this.state.errorMessage}</div>
         }
@@ -67,7 +59,33 @@ class App extends React.Component {
             return <SeasonDisplay lat={this.state.lat} /> // take property from the state and pass it as a prop down into the SeasonDisplay
         }
 
-        return <div>Loading!</div> // if we failed the 2 above, we have neither latitude nor error message, so show direct the return <div>
+        return <Spinner message='Please accept location request' /> // if we failed the 2 above, we have neither latitude nor error message, so show direct the return <div>
+    }
+
+    render() { // React says we have to define render
+        return (
+            //     <div>
+            //         Latitude: {this.state.lat}
+            //         <br />
+            //         Error: {this.state.errorMessage}
+            //     </div>
+            // );
+
+            // // CONDITIONAL RENDING
+            // if (this.state.errorMessage && !this.state.lat) { // if we have errorMessage && do not have a latitude
+            //     return <div>Error: {this.state.errorMessage}</div>
+            // }
+
+            // if (!this.state.errorMessage && this.state.lat) {
+            //     // return <div>Latitude: {this.state.lat}</div>
+            //     return <SeasonDisplay lat={this.state.lat} /> // take property from the state and pass it as a prop down into the SeasonDisplay
+            // }
+
+            // return <Spinner message='Please accept location request' /> // if we failed the 2 above, we have neither latitude nor error message, so show direct the return <div>
+            <div className="border red">
+                {this.renderContent()}
+            </div>
+        );
     }
 }
 
