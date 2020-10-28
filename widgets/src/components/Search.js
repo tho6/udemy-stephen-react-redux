@@ -3,11 +3,22 @@ import axios from 'axios';
 
 const Search = () => {
     const [term, setTerm] = useState('');
+    const [debouncedTerm, setDebouncedTerm] = useState(term);
     const [results, setResults] = useState([]);
 
     // console.log(results)
 
     // console.log('I run with every render');
+
+    useEffect(() => {
+        const timerId = setTimeout(() => {
+            setDebouncedTerm(term);
+        }, 1000);
+
+        return () => {
+            clearTimeout(timerId);
+        };
+    }, [term]); // watching term, set up the timer to update setDebouncedTerm
 
     useEffect(() => {
         const search = async () => {
@@ -18,20 +29,35 @@ const Search = () => {
                     list: 'search',
                     origin: '*',
                     format: 'json',
-                    srsearch: term,
+                    srsearch: debouncedTerm,
                 },
             });
 
             setResults(data.query.search);
             // setResults(response.data.query.search);
-        }
+        };
         // console.log('I only after every render and at initial');
-
-        if (term) {
+        if (debouncedTerm) {
             search();
         }
-    }, [term]);
+    }, [debouncedTerm]);
 
+    // useEffect(() => {
+
+    //     if (term && !results.length) {
+    //         search();
+    //     } else {
+    //         const timeoutId = setTimeout(() => {
+    //             if (term) {
+    //                 search();
+    //             }
+    //         }, 1000);
+
+    //         return () => {
+    //             clearTimeout(timeoutId);
+    //         };
+    //     }
+    // }, [term, results.length]);
 
     const renderedResults = results.map((result) => {
         const regex = /(<([^>]+)>)/gi;  //NEW
